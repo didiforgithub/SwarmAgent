@@ -18,7 +18,8 @@ Role需要支持哪些功能
 """
 
 
-class Role():
+class Agent():
     def __init__(self):
-        self.motivation = "happiness"
+        pass
+
        
