@@ -27,6 +27,8 @@ AutoGen太简洁，使用很简单的代码完成了一个工具类框架。对�
 3. Group设置，GroupManager的设置在工具类框架中非常优秀（虽然对拟人类没啥作用）；同时他的消息广播与存储机制可以作为一个参考模块
 4. Select发言者机制也非常有趣，Autogen没有设置一个SOP的工作流程，而是让大模型决定谁来发言进行下一步
 5. Human In the loop 体现很好
+6. 代码使用到的Python语言特性很多，我只能说确实是微软的
+   1. Union Option 这些都是这次才学会的
 ## 代码跑通流程
 
 [Colab链接-使用Autogen抓取yahoo新闻并汇总一篇博客](https://colab.research.google.com/drive/1n2ks_lOYT8SADoREqHBtAWOk0TbrGuf8?usp=sharing)
