@@ -42,30 +42,42 @@ tool 背弃会议结果，选择直接执行这个行为
 
 
 class Agent:
-    def __init__(self, name: str, identity: str, tool_list: List, memory_path="../storage/memory_storage"):
+    def __init__(self, name: str, identity: str, tool_list:List=None, memory_path="../storage/memory_storage"):
         self.name = name
         self.identity = identity
-        self.tool_list = tool_list
-        self.memory_path = os.path.join(memory_path, f"{self.name}.json")
+        if tool_list is None:
+            self.tool_list = []
+        else:
+            self.tool_list = tool_list
+        # TODO 这里需要注意，不能只用name作为文件名，需要加上UUID或者时间戳
         os.makedirs(self.memory_path, exist_ok=True)
+        self.memory_path = os.path.join(memory_path, f"{self.name}.json")
         self.memory = self.memory_loads()
         self.llm = OpenAILLM()
 
     def memory_loads(self):
-        with open(self.memory_path, "r") as f:
-            memory = json.load(f)
-        return memory
+        if os.path.isfile(self.memory_path):
+            with open(self.memory_path, "r") as f:
+                self.memory = json.load(f)
+        else:
+            with open(self.memory_path, "w") as f:
+                json.dump({}, f)  # 创建一个空的字典
+            self.memory = {}
 
-    def generate_chat(self, content: str, max_tokens):
+    def generate_chat(self, prompt, content: str, max_tokens=None):
+        iss = f"Identity Desciption: You are {self.name}. Your identity is {self.identity}"
+        content = prompt + iss + content
         chat = self.llm.get_response(content, max_tokens)
         return chat
+
+    """
+    为了得到一个简单的结果，现在代码写的很差劲，之后要整体改动一下符合我的原本结构
+    """
 
     def send_message(self, message: str, env, receiver: List = None):
         """
         选择一个Environment与Agent，将信息发送给指定的Agent；如果Agent为空List，则发送给所有Agent
         """
-        if receiver is None:
-            receiver = env.agent_list
         pass
 
     def receieve_message(self):
