@@ -15,7 +15,7 @@
 
 """
 from typing import List
-from ..llm_engine import OpenAILLM
+from swarmagent.engine.llm_engine import OpenAILLM
 from swarmagent.singleagent.singleagent import Agent
 
 
@@ -46,7 +46,8 @@ class Group:
         self.message_history.append(f"{self.mode}'s topic:{self.topic}.")
         conference_prompt = f"You need to play the role of a participant in a meeting. The topic of the meeting is {self.topic}. I will provide you with your Identity Description and the Message history of the meeting. Please speak from the perspective of your role, engaging fully with your Identity and the other participants in the discussion." + "\n" + "Note one: The language style should be close to everyday conversation." + "\n" + "Note two: Before you speak, first consider the Message history and the current issues of the topic, then carefully consider your viewpoint before you contribute to the discussion."
 
-        for _ in range(self.max_round):
+        for i in range(self.max_round):
+            print(f"现在是第{i}轮")
             """
             1. 如果round为0则由Power-Agent发言引出话题
             2. 循环逻辑
@@ -59,7 +60,7 @@ class Group:
             if conferencing:
                 chat = address_agent.generate_chat(conference_prompt, f"message history:{self.message}")
                 self.message_history.append(f"{address_agent.name}:{chat}")
-                print(f"{address_agent.name}:{chat}")
+                print(f"{address_agent.name} says:{chat}")
                 address_agent = self.select_speaker()
                 conferencing = self.terminate_chat()
             else:
@@ -89,6 +90,7 @@ class Group:
         terminate_prompt = f"""
         You have the authority to terminate the meeting. You may choose to end the meeting or to continue it.
         If you decide to continue the meeting, please return True. If you decide to end the meeting, please return False.
+        Remember, you can only return True or False
         Your Identity and the transcript of the meeting's discussions are as follows:
         """
         result = self.power_agent.generate_chat(terminate_prompt, f"message history:{self.message}")

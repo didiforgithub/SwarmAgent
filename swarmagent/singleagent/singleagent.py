@@ -15,11 +15,13 @@ Role需要支持哪些功能
 对外
 1. 支持MultiAgent的Environment环境
 2. 支持 perceive 方法获取环境信息
+
 """
-from ..llm_engine import OpenAILLM
-from typing import List
 import json
 import os
+from ..engine.llm_engine import OpenAILLM
+from typing import List
+
 
 """
 先来一个基础版本的实现多Agent对话与自定义Agent
@@ -50,7 +52,7 @@ class Agent:
         else:
             self.tool_list = tool_list
         # TODO 这里需要注意，不能只用name作为文件名，需要加上UUID或者时间戳
-        os.makedirs(self.memory_path, exist_ok=True)
+        os.makedirs(memory_path, exist_ok=True)
         self.memory_path = os.path.join(memory_path, f"{self.name}.json")
         self.memory = self.memory_loads()
         self.llm = OpenAILLM()

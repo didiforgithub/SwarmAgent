@@ -20,8 +20,8 @@ class OpenAILLM:
             self.max_tokens = max_tokens
         for i in range(retries):
             try:
-                response = openai.Completion.create(model=self.model, messages=[{"role": "user", "content": prompt}],
-                                                    maxtokens=self.max_tokens, temperature=self.temperature)
+                response = openai.ChatCompletion.create(model=self.model, messages=[{"role": "user", "content": prompt}],
+                                                    max_tokens=self.max_tokens, temperature=self.temperature)
                 return response.choices[0].message.content
             except openai.error.RateLimitError:
                 print("Occur RateLimitError, sleep 10s")
