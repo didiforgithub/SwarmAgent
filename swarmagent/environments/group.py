@@ -58,7 +58,7 @@ class Group:
                 3.0 PowerAgent首先思考自己的想法与会议结果是否一致，如果一致，则进行总结并输出会议结果；如果不一致，思考是否维持自己的建议还是接受会议结果，输出这个决策
             """
             if conferencing:
-                chat = address_agent.generate_chat(conference_prompt, f"message history:{self.message}")
+                chat = address_agent.generate_chat(conference_prompt, f"message history:{self.message}", max_tokens=300)
                 self.message_history.append(f"{address_agent.name}:{chat}")
                 print(f"{address_agent.name} says:{chat}")
                 address_agent = self.select_speaker()

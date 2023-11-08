@@ -4,10 +4,11 @@
 # email      : didi4goooogle@gmail.com
 # Description: Minimum demo
 import openai
+import os
 import swarmagent.singleagent.singleagent as singleagent
 import swarmagent.environments.group as group
 
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_KEY")
 """
 请使用英文，按照我的要求输出以一下内容
 在2023年11月6日，一个中国初创公司的CEO,CTO,CFO在公司会议室讨论是否购入华为的显卡训练AI模型。
