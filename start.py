@@ -36,12 +36,3 @@ result = conference_room.conference()
 
 print(f"会议结果为{result}")
 print(f"会议历史记录为{conference_room.message_history}")
-
-"""
-群组: 
-- power Agent 转移
-- 话题迁移的产生 是否伴随 Power Agent 的转移
-
-- 单 Group 类别（Watcher，Poster，...）
-- 多 Group 
-"""

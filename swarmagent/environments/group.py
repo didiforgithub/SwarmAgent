@@ -15,7 +15,7 @@
 
 """
 from typing import List
-from swarmagent.engine.llm_engine import OpenAILLM
+from swarmagent.engine.llm_engine import OpenAILLM,prompt_load
 from swarmagent.singleagent.singleagent import Agent
 
 
@@ -87,13 +87,8 @@ class Group:
         return speaker
 
     def terminate_chat(self):
-        terminate_prompt = f"""
-        You have the authority to terminate the meeting. You may choose to end the meeting or to continue it.
-        If you decide to continue the meeting, please return True. If you decide to end the meeting, please return False.
-        Remember, you can only return True or False
-        Your Identity and the transcript of the meeting's discussions are as follows:
-        """
-        result = self.power_agent.generate_chat(terminate_prompt, f"message history:{self.message}")
+        terminate_prompt = prompt_load("../prompt/group_conference_terminate.txt")
+        result = self.power_agent.generate_json(query=f"message history:{self.message}", instruction=terminate_prompt)
         print(f"terminate_chat:{result}")
         return True
 

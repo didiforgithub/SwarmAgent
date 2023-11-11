@@ -6,25 +6,35 @@
 
 import openai
 import time
+import json
 
 
 class OpenAILLM:
-    def __init__(self, model="gpt-3.5-turbo-1106", temperature=0.7, max_tokens=20, timeout=60):
+    def __init__(self, model="gpt-3.5-turbo-1106", temperature=0.7, timeout=60):
+
         self.model = model
         self.temperature = temperature
-        self.max_tokens = max_tokens
         self.timeout = timeout
 
-    def get_response(self, prompt: str, max_tokens=None, instructions: str = "No Special Instructions", retries=5):
-        if max_tokens:
-            self.max_tokens = max_tokens
-        if instructions:
-            prompt = prompt + instructions
+    def get_response(self, prompt: str, json_mode=False, max_tokens=100, retries=5):
+        """
+        JSON_MODE开启之后直接返回JSON格式的结果，否则返回字符串
+        """
+        json_mode = "text" if not json_mode else "json_object"
         for i in range(retries):
             try:
-                response = openai.ChatCompletion.create(model=self.model, messages=[{"role": "user", "content": prompt}],
-                                                    max_tokens=self.max_tokens, temperature=self.temperature)
-                return response.choices[0].message.content
+                response = openai.ChatCompletion.create(
+                    model=self.model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=max_tokens,
+                    temperature=self.temperature,
+                    response_format={"type": json_mode}
+                )
+                if json_mode:
+                    result = json.loads(response.choices[0].message.content)
+                else:
+                    result = response.choices[0].message.content
+                return result
             except openai.error.RateLimitError:
                 print("Occur RateLimitError, sleep 10s")
                 time.sleep(10)
@@ -32,3 +42,13 @@ class OpenAILLM:
                 print("Please check your openai api key")
             except Exception as e:
                 print(e)
+
+
+def prompt_load(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+    except FileNotFoundError:
+        content = "File not found at the specified path."
+
+    return content

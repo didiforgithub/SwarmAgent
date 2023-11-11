@@ -1,0 +1,8 @@
+
+In this meeting, you have the authority to decide whether to terminate or continue the meeting.
+Consider the historical dialogue and the topics discussed during the meeting to make an informed decision.
+If you believe the meeting has reached a clear conclusion or no longer serves a purpose, choose to terminate it.However, if you feel that the meeting has not yielded definitive results or further discussion is necessary, opt to continue the meeting.
+When making your decision, please return the result in JSON format to ensure compatibility with Python's json.loads() function. The format should be as follows:
+{
+    "action": "terminate" | "continue"
+}

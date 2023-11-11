@@ -44,9 +44,9 @@ tool 背弃会议结果，选择直接执行这个行为
 
 
 class Agent:
-    def __init__(self, name: str, identity: str, tool_list:List=None, memory_path="../storage/memory_storage"):
+    def __init__(self, name: str, profile: str, tool_list:List=None, memory_path="../storage/memory_storage"):
         self.name = name
-        self.identity = identity
+        self.profile = f"{self.name},{profile}"
         if tool_list is None:
             self.tool_list = []
         else:
@@ -66,11 +66,18 @@ class Agent:
                 json.dump({}, f)  # 创建一个空的字典
             self.memory = {}
 
-    def generate_chat(self, prompt, content: str, max_tokens=None):
-        iss = f"Identity Desciption: You are {self.name}. Your identity is {self.identity}"
-        content = prompt + iss + content
-        chat = self.llm.get_response(content, max_tokens)
+    def generate_chat(self, query, instruction ,max_tokens=100):
+        # 思考Prompt组成方式：Profile + Content(query) + Instruction
+        prompt = self.profile + query + instruction
+        chat = self.llm.get_response(prompt, max_tokens=max_tokens)
         return chat
+
+    def generate_json(self,query, instruction="Please return result in JSON format.",max_tokens=100):
+        prompt = self.profile + query + instruction
+        json_result = self.llm.get_response(prompt, json_mode=True, max_tokens=max_tokens)
+
+        return json_result
+
 
     """
     为了得到一个简单的结果，现在代码写的很差劲，之后要整体改动一下符合我的原本结构
