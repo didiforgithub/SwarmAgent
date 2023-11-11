@@ -15,7 +15,7 @@
 
 """
 from typing import List
-from swarmagent.engine.llm_engine import OpenAILLM,prompt_load
+from swarmagent.engine.llm_engine import OpenAILLM, prompt_load
 from swarmagent.singleagent.singleagent import Agent
 
 
@@ -74,7 +74,16 @@ class Group:
             msg = msg + i + "\n"
         return msg
 
+    def get_agent(self, name: str):
+        for agent in self.agent_list:
+            if agent.name == name:
+                return agent
+        return None
+
     def select_speaker(self):
+        # TODO self.mode choose different select_prompt
+        # TODO 修改Prompt
+
         select_prompt = f"""
         You are in a role play game. The following roles are available:
         {self.agents_roles()}.
@@ -84,15 +93,27 @@ class Group:
 
         speaker = self.llm.get_response(select_prompt)
         print(f"select_speaker:{speaker}")
-        return speaker
+        speaker_agent = self.get_agent(speaker)
+        if speaker_agent:
+            return speaker_agent
+        else:
+            return self.power_agent
 
     def terminate_chat(self):
+        """
+        TODO self.mode choose diffrent terminate_prompt
+        """
         terminate_prompt = prompt_load("../prompt/group_conference_terminate.txt")
-        result = self.power_agent.generate_json(query=f"message history:{self.message}", instruction=terminate_prompt)
-        print(f"terminate_chat:{result}")
-        return True
+        json_result = self.power_agent.generate_json(query=f"message history:{self.message}",
+                                                     instruction=terminate_prompt)
+        print(f"terminate_chat:{json_result['action']}")
+        result = True if json_result["action"] == "continue" else False
+        return result
 
     def conclusion_chat(self):
+        """
+        TODO self.mode choose diffrent conclusion_prompt
+        """
         conclusion_prompt = f"""
         You need to summarize the meeting based on the message_history from the meeting. 
         Then provide your perspective on the issues described in {self.topic}.
