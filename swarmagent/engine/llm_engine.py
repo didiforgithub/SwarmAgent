@@ -17,6 +17,7 @@ class OpenAILLM:
         self.timeout = timeout
 
     def get_response(self, prompt: str, json_mode=False, max_tokens=100, retries=5):
+        print(f"test:{prompt},test_mode:{json_mode}")
         """
         JSON_MODE开启之后直接返回JSON格式的结果，否则返回字符串
         """
@@ -31,6 +32,8 @@ class OpenAILLM:
                     response_format={"type": json_mode}
                 )
                 if json_mode:
+                    result = response.choices[0].message.content
+                    print(result)
                     result = json.loads(response.choices[0].message.content)
                 else:
                     result = response.choices[0].message.content
@@ -41,7 +44,7 @@ class OpenAILLM:
             except openai.error.AuthenticationError:
                 print("Please check your openai api key")
             except Exception as e:
-                print(e)
+                print(f"{__name__} occurs: {e}")
 
 
 def prompt_load(file_path):

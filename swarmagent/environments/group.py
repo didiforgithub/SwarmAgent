@@ -80,6 +80,9 @@ class Group:
                 return agent
         return None
 
+    def agents_roles(self):
+        return [f"{agent.name}:{agent.profile}" for agent in self.agent_list]
+
     def select_speaker(self):
         # TODO self.mode choose different select_prompt
         # TODO 修改Prompt
@@ -123,5 +126,4 @@ class Group:
         print(f"conclusion_chat:{result}")
         return "conclusion"
 
-    def agents_roles(self):
-        return [f"{agent.name}:{agent.identity}" for agent in self.agent_list]
+
