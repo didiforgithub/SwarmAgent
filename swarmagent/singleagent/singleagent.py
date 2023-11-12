@@ -68,7 +68,7 @@ class Agent:
 
     def generate_chat(self, query, instruction ,max_tokens=100):
         # 思考Prompt组成方式：Profile + Content(query) + Instruction
-        prompt = self.profile + query + instruction
+        prompt = self.profile + '\n' + query + '\n' + instruction
         chat = self.llm.get_response(prompt, max_tokens=max_tokens)
         return chat
 

@@ -17,11 +17,12 @@ class OpenAILLM:
         self.timeout = timeout
 
     def get_response(self, prompt: str, json_mode=False, max_tokens=100, retries=5):
-        print(f"test:{prompt},test_mode:{json_mode}")
+        print(f"current prompt :{prompt}")
+        print(f"current json mode: {json_mode}")
         """
         JSON_MODE开启之后直接返回JSON格式的结果，否则返回字符串
         """
-        json_mode = "text" if not json_mode else "json_object"
+        response_type = "text" if not json_mode else "json_object"
         for i in range(retries):
             try:
                 response = openai.ChatCompletion.create(
@@ -29,18 +30,19 @@ class OpenAILLM:
                     messages=[{"role": "user", "content": prompt}],
                     max_tokens=max_tokens,
                     temperature=self.temperature,
-                    response_format={"type": json_mode}
+                    response_format={"type": response_type}
                 )
                 if json_mode:
                     result = response.choices[0].message.content
-                    print(result)
+                    print(f"Json mode result: {result}")
                     result = json.loads(response.choices[0].message.content)
                 else:
                     result = response.choices[0].message.content
                 return result
             except openai.error.RateLimitError:
                 print("Occur RateLimitError, sleep 10s")
-                time.sleep(10)
+                time.sleep(20)
+                print("Rate limit retry")
             except openai.error.AuthenticationError:
                 print("Please check your openai api key")
             except Exception as e:

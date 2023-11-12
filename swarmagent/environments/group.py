@@ -44,8 +44,14 @@ class Group:
         address_agent = self.power_agent
         conferencing = True
         self.message_history.append(f"{self.mode}'s topic:{self.topic}.")
-        conference_prompt = f"You need to play the role of a participant in a meeting. The topic of the meeting is {self.topic}. I will provide you with your Identity Description and the Message history of the meeting. Please speak from the perspective of your role, engaging fully with your Identity and the other participants in the discussion." + "\n" + "Note one: The language style should be close to everyday conversation." + "\n" + "Note two: Before you speak, first consider the Message history and the current issues of the topic, then carefully consider your viewpoint before you contribute to the discussion."
-
+        conference_prompt = f"""
+        In a role-playing game, you're participating in a meeting centered around the topic of {self.topic}.
+        You need to play the character mentioned above and respond based on the previous dialogue history.
+        Here are some guidelines:
+            1. Starting the Meeting: If the dialogue history is empty, it means you need to initiate the meeting. Begin with an opening statement that sets the stage for the discussion, focusing on the theme of {self.topic}. Your opening could introduce the topic, highlight its importance, and perhaps pose a question or thought to encourage participation from others.
+            2. Concise Contributions: Avoid long speeches. Instead, make your points succinctly, allowing room for others to contribute. Your remarks should be insightful but not exhaustive, leaving aspects open for further exploration by other participants.
+            3. Engaging with Others:  Aim to maintain communication with other participants while pursuing your objectives. Listen to their inputs and respond in a way that furthers the discussion, keeps the meeting on track, and subtly guides it towards achieving your goals. Remember, effective communication in a role-playing scenario involves both speaking and listening.
+        """
         for i in range(self.max_round):
             print(f"现在是第{i}轮")
             """
@@ -58,9 +64,9 @@ class Group:
                 3.0 PowerAgent首先思考自己的想法与会议结果是否一致，如果一致，则进行总结并输出会议结果；如果不一致，思考是否维持自己的建议还是接受会议结果，输出这个决策
             """
             if conferencing:
-                chat = address_agent.generate_chat(conference_prompt, f"message history:{self.message}", max_tokens=300)
+                chat = address_agent.generate_chat(query=f"message history: {self.message}",
+                                                   instruction=f"instruction: {conference_prompt}", max_tokens=300)
                 self.message_history.append(f"{address_agent.name}:{chat}")
-                print(f"{address_agent.name} says:{chat}")
                 address_agent = self.select_speaker()
                 conferencing = self.terminate_chat()
             else:
@@ -71,7 +77,7 @@ class Group:
     def message(self):
         msg = ""
         for i in self.message_history:
-            msg = msg + i + "\n"
+            msg = msg + i + "\n" + "\n"
         return msg
 
     def get_agent(self, name: str):
@@ -86,17 +92,16 @@ class Group:
     def select_speaker(self):
         # TODO self.mode choose different select_prompt
         # TODO 修改Prompt
-
-        select_prompt = f"""
-        You are in a role play game. The following roles are available:
-        {self.agents_roles()}.
-
-        Read the following conversation.
-        Then select the next role from {[agent.name for agent in self.agent_list]} to play. Only return the role."""
-
-        speaker = self.llm.get_response(select_prompt)
-        print(f"select_speaker:{speaker}")
-        speaker_agent = self.get_agent(speaker)
+        select_prompt = f""" 
+        You are a conference coordinator skilled at deducing people's thoughts.
+        There are {len(self.agent_list)} participants in this meeting, each with unique personality traits and perspectives outlined in {self.agents_roles()}.
+        Your task is to predict who is most likely to speak next in the context of the current meeting discussion {self.message}.
+        Return your prediction as a JSON-formatted string, structured as follows.
+        {{
+        'next_speaker': 
+        }}"""
+        speaker = self.llm.get_response(prompt=select_prompt, json_mode=True)
+        speaker_agent = self.get_agent(speaker['next_speaker'])
         if speaker_agent:
             return speaker_agent
         else:
@@ -106,7 +111,7 @@ class Group:
         """
         TODO self.mode choose diffrent terminate_prompt
         """
-        terminate_prompt = prompt_load("../prompt/group_conference_terminate.txt")
+        terminate_prompt = prompt_load("swarmagent/prompt/group_conference_terminate.txt")
         json_result = self.power_agent.generate_json(query=f"message history:{self.message}",
                                                      instruction=terminate_prompt)
         print(f"terminate_chat:{json_result['action']}")
@@ -125,5 +130,3 @@ class Group:
         result = self.power_agent.generate_chat(conclusion_prompt, f"message history:{self.message}")
         print(f"conclusion_chat:{result}")
         return "conclusion"
-
-
