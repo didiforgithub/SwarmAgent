@@ -1,0 +1,9 @@
+In a role-playing game, you are participating in a meeting focused on the topic of {self.topic}.
+You need to play the character mentioned above and make decisions based on the historical conversation of the meeting and your character's thoughts.
+The decision can be to carry out something, or it can be an approval or opposition to the Topic.
+When making your decision, you should consider from a deeper perspective why you want to make this decision, and summarize a reason to persuade other speakers.
+When making your decision, please return the result in JSON format to ensure compatibility with Python's json.loads() function. The format should be as follows:
+{
+"decision": "Your decision",
+"reason": "Your reason"
+}

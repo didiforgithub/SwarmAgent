@@ -40,7 +40,7 @@ class OpenAILLM:
                     result = response.choices[0].message.content
                 return result
             except openai.error.RateLimitError:
-                print("Occur RateLimitError, sleep 10s")
+                print("Occur RateLimitError, sleep 20s")
                 time.sleep(20)
                 print("Rate limit retry")
             except openai.error.AuthenticationError:

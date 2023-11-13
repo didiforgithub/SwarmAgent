@@ -32,7 +32,13 @@ conference_room = group.Group(ceo_agent, [ceo_agent, cto_agent, cfo_agent],
                         "whether to purchase Huawei's GPUs for AI training", mode="conference", max_round=10)
 
 print(conference_room.power_agent)
-result = conference_room.conference()
+try:
+    result = conference_room.conference()
+except KeyboardInterrupt:
+    for i in conference_room.message_history:
+        print(i)
 
-print(f"会议结果为{result}")
-print(f"会议历史记录为{conference_room.message_history}")
+print(result)
+print("---------------------------------------message history---------------------------------------")
+for i in conference_room.message_history:
+    print(i)
