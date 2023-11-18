@@ -5,8 +5,8 @@
 # Description: Minimum demo
 import openai
 import os
-import swarmagent.singleagent.singleagent as singleagent
-import swarmagent.environments.group as group
+import swarmagent.agent.singleagent as singleagent
+import swarmagent.group.group as group
 
 openai.api_key = os.getenv("OPENAI_KEY")
 """

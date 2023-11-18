@@ -2,8 +2,7 @@
 # Date       : 2023/11/6
 # Author     : Jiayi Zhang
 # email      : didi4goooogle@gmail.com
-# Description: 多Agent的Environment
-
+# Description: Group类实现
 
 """
 多agent的环境
@@ -16,7 +15,7 @@
 """
 from typing import List
 from swarmagent.engine.llm_engine import OpenAILLM, prompt_load
-from swarmagent.singleagent.singleagent import Agent
+from swarmagent.agent.singleagent import Agent
 
 
 class Group:
