@@ -13,5 +13,19 @@
 
 ## 当前实现
 ### Group通信设计
-为了模拟真实世界的表现，Group的通信环境在代码结构中被称为environment
+Group的通信环境在代码结构中被称为environment。为了模拟真实社会中的情景，Group拥有多种不同的mode，用户可以通过继承Group类对mode进行扩展，以实现用户所需求的模拟场景。
+而environment类则可支持多个不同mode类的运行，如家庭，公司，非盈利组织，网络群组等。不同mode的Group可以通过environment进行通信，从而实现不同mode之间的交互。
+
+- 未进行时间步等具体执行的设计，是当前的构想
+
 ### 权力分配（Group本体）设计
+权力分配机制需要一个可建模的理论作为基础，目前还未找到一个较好的理论进行建模，因此权力分配选用一个相对简单的机制实现。
+
+吸取了AutoGen框架`Select Speaker`函数的思想，我们为Group类加入了PowerAgent这一属性。从会议这一简单场景来讲，PowerAgent代表的是公司中会议的老板，
+拥有结束会议，做出决策的权利，而其他Agent则只能在会议中发言影响PowerAgent，但无法做出决策。在这一场景中，PowerAgent的权力分配为1，其他Agent的权力分配为0。
+会议的一个简单的例子如下：
+
+
+<p align="center">
+  <img src="src/conference.drawio.png" alt="SWARM AGENT" width="100%">
+</p>
