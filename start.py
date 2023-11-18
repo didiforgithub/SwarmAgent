@@ -9,29 +9,34 @@ import swarmagent.agent.singleagent as singleagent
 import swarmagent.group.group as group
 
 openai.api_key = os.getenv("OPENAI_KEY")
-"""
-请使用英文，按照我的要求输出以一下内容
-在2023年11月6日，一个中国初创公司的CEO,CTO,CFO在公司会议室讨论是否购入华为的显卡训练AI模型。
-这三个人的商业特点与性格特点迥异，但他们都是为了公司的发展而努力。
 
-请你按照以下格式分别输出三个角色的name与Identity，你可以自由发挥，但是要保证输出的内容符合上述要求
-{
-    "name": ,
-    "identitu": 
-}
+"""
+1. Prompt 调整 —— 开场白作为单独的一个Action执行，需要包含所有角色的信息
+2. Prompt 调整 —— 角色背景强调差异与观点
 """
 
-ceo_agent = singleagent.Agent(name="Zhang Wei",
-                  profile="Zhang Wei, as the CEO, is a forward-thinking leader who believes in harnessing cutting-edge technology to stay ahead of the competition. She has a keen interest in adopting AI to streamline operations and enhance product offerings. Despite the high costs, she is inclined towards investing in Huawei's GPUs as a long-term strategy for AI development.")
-cto_agent = singleagent.Agent(name="Li Jie",
-                  profile="Li Jie, the CTO, is deeply tech-savvy with a practical approach. He is meticulous about technical specifications and performance metrics. Although he understands the benefits of Huawei's GPUs for AI, he is cautious about compatibility issues and support. He prefers a balanced approach, weighing the pros and cons of the hardware in the context of the company's specific AI training needs.")
-cfo_agent = singleagent.Agent(name="Wang Hong",
-                  profile="Wang Hong, serving as the CFO, is very cost-conscious and data-driven. She constantly analyzes the financial implications of any investment and is wary of expenditures that do not promise a clear return on investment (ROI). She acknowledges the potential of AI but is advocating for a thorough cost-benefit analysis before approving the purchase of Huawei's GPUs.")
+ceo_agent = singleagent.Agent(
+    name="Dr. Evelyn Harper",
+    profile="Chief Executive Officer of CloseAI. A visionary with a Ph.D. in computer science, Dr. Harper played a pivotal role in shaping CloseAI's strategic direction. Known for her strong leadership and innovation-driven mindset. INTJ",
+    innervoice="Supports limited government intervention, emphasizing the importance of industry self-regulation for fostering innovation and maintaining a competitive edge in the global market."
+)
 
-conference_room = group.Group(ceo_agent, [ceo_agent, cto_agent, cfo_agent],
-                        "whether to purchase Huawei's GPUs for AI training", mode="conference", max_round=10)
+cto_agent = singleagent.Agent(
+    name="Alex Rodriguez",
+    profile="Chief Technology Officer of CloseAI. A brilliant mind with a passion for ethics in technology, Alex is a seasoned expert in artificial intelligence and machine learning. Holds a Master's degree in computer engineering. INFP",
+    innervoice="Favors government oversight to ensure ethical AI use, expressing concerns about the potential misuse of CogniX and its societal impact. Advocates for transparency and accountability."
+)
 
-print(conference_room.power_agent)
+clo_agent = singleagent.Agent(
+    name="Emily Lawson",
+    profile="Chief Legal Officer of CloseAI. With a background in corporate law, Emily is known for her pragmatism and attention to detail. Holds a law degree from a prestigious university. ESTJ",
+    innervoice="Believes in a balanced approach, advocating for a regulatory framework that safeguards public interests without stifling technological advancement. Strives to find a middle ground between innovation and responsible use of AI."
+)
+
+conference_room = group.Group(power_agent=ceo_agent,
+                              topic="CloseAI, a leading tech company, has revolutionized the field with an advanced AI that transcends human imagination. Their flagship product, 'CogniX', has applications ranging from healthcare to finance, raising questions about the need for regulatory oversight. Should CloseAI's AI products be subject to government regulation?",
+                              member_list=[ceo_agent, cto_agent, clo_agent])
+
 try:
     result = conference_room.conference()
 except KeyboardInterrupt:

@@ -107,6 +107,9 @@ class Group:
         else:
             return self.power_agent
 
+    def begin_chat(self):
+        pass
+
     def terminate_chat(self):
         """
         TODO self.mode choose diffrent terminate_prompt
