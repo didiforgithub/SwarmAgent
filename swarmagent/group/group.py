@@ -43,15 +43,6 @@ class Group:
         address_agent = self.power_agent
         conferencing = True
         self.message_history.append(f"{self.mode}'s topic:{self.topic}.")
-        conference_prompt = f"""
-        In a role-playing game, you're participating in a meeting centered around the topic of {self.topic}. 
-        You are limited to playing the specific character mentioned previously. Your responses and decisions must be based solely on this character's perspective, considering their unique role and background.
-        Here are some guidelines:
-            1. Starting the Meeting: If the dialogue history is empty, it means you need to initiate the meeting. Begin with an opening statement that sets the stage for the discussion, focusing on the theme of {self.topic}. Your opening could introduce the topic, highlight its importance, and perhaps pose a question or thought to encourage participation from others.
-            2. Concise Contributions: Avoid long speeches. Instead, make your points succinctly, allowing room for others to contribute. Your remarks should be insightful but not exhaustive, leaving aspects open for further exploration by other participants.
-            3. Engaging with Others: Engaging with Others: When others seek opinions, focus on responding to their views and needs rather than repetitively expressing your own desire for their input. Your aim should be to advance the conversation by acknowledging and building upon what others have said, fostering a collaborative dialogue that moves the discussion forward.
-            4. Normal Speaking Tone in Results: When participating in discussions, use a normal speaking tone that reflects how your character would verbally express themselves in the meeting. Avoid the tone of internal thoughts or monologues. Ensure that your character's responses and contributions sound like natural dialogue in the context of the role-playing game
-        """
         for i in range(self.max_round):
             print(f"现在是第{i}轮")
             """
@@ -64,9 +55,11 @@ class Group:
                 3.0 PowerAgent首先思考自己的想法与会议结果是否一致，如果一致，则进行总结并输出会议结果；如果不一致，思考是否维持自己的建议还是接受会议结果，输出这个决策
             """
             if conferencing:
-                chat = address_agent.generate_chat(query=f"message history: {self.message}",
-                                                   instruction=f"instruction: {conference_prompt}", max_tokens=300)
-                self.message_history.append(f"{address_agent.name}:{chat}")
+                if i == 0:
+                    chat = self.begin_chat()
+                else:
+                    chat = self.communicate_chat(address_agent, max_tokens=300)
+                self.message_history.append(f"{address_agent.name}: {chat}")
                 address_agent = self.select_speaker()
                 conferencing = self.terminate_chat()
             else:
@@ -82,7 +75,7 @@ class Group:
 
     def get_agent(self, name: str):
         for agent in self.agent_list:
-            if agent.name == name:
+            if agent.name in name:
                 return agent
         return None
 
@@ -107,8 +100,32 @@ class Group:
         else:
             return self.power_agent
 
+
+    def communicate_chat(self, address_agent: Agent, max_tokens=300):
+        communicate_prmopt = f"""
+        In a role-playing game, you're participating in a meeting centered around the topic of {self.topic}. 
+        You are limited to playing the specific character mentioned previously. Your responses and decisions must be based solely on this character's perspective, considering their unique role and background.
+        Here are some guidelines:
+            1. Respond to the previous speaker's remarks or present your own perspective in a manner consistent with professional discourse.
+            2. Emphasize your character's unique role and background when expressing opinions or responding to others.
+            3. In case of encountering unfamiliar information, improvise responses based on your character's context to maintain coherence in the role-playing setting.
+        Remember, your communication should align with the norms and dynamics of an authentic business meeting
+        """
+        chat = address_agent.generate_chat(query=f"message history: {self.message}",
+                                           instruction=f"instruction: {communicate_prmopt}", max_tokens=max_tokens)
+        return chat
+
+
     def begin_chat(self):
-        pass
+        # 开场白，修改Prompt
+        begin_prompt = f"""
+        You are about to participate in a virtual role-playing meeting centered around the topic of {self.topic}. 
+        In this meeting, you will engage in discussions alongside other characters, including the following individuals: {self.agents_roles()}.
+        Please make an opening statement based on your character's identity, personality, and perspectives, adopting a tone consistent with real-world communication.
+        """
+        opening_statement = self.power_agent.generate_chat(query="",
+                                                           instruction=begin_prompt)
+        return opening_statement
 
     def terminate_chat(self):
         """
@@ -133,10 +150,10 @@ class Group:
         When making your decision, you should consider from a deeper perspective why you want to make this decision, and summarize a reason to persuade other speakers. 
         When making your decision, please return the result in JSON format to ensure compatibility with Python's json.loads() function. The format should be as follows:
         {{
-        "decision": "Your decision",
-        "reason": "Your reason"
+        "Decision": "Your decision",
+        "Reason": "Your reason"
         }}
         """
         result = self.power_agent.generate_json(query=f"message history: {self.message}", instruction=conclusion_prompt)
         print(f"conclusion_chat:{result}")
-        return f'decision:{result["decision"]},reason:{result["reason"]}'
+        return f'decision:{result["Decision"]},reason:{result["Reason"]}'
