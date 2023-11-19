@@ -34,15 +34,17 @@ clo_agent = singleagent.Agent(
 )
 
 conference_room = group.Group(power_agent=ceo_agent,
+                              agent_list=[ceo_agent, cto_agent, clo_agent],
                               topic="CloseAI, a leading tech company, has revolutionized the field with an advanced AI that transcends human imagination. Their flagship product, 'CogniX', has applications ranging from healthcare to finance, raising questions about the need for regulatory oversight. Should CloseAI's AI products be subject to government regulation?",
-                              member_list=[ceo_agent, cto_agent, clo_agent])
+                              mode="conference",
+                              max_round=10)
 
 try:
     result = conference_room.conference()
 except KeyboardInterrupt:
     for i in conference_room.message_history:
         print(i)
-
+print("---------------------------------------Decision & Reason---------------------------------------")
 print(result)
 print("---------------------------------------message history---------------------------------------")
 for i in conference_room.message_history:
