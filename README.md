@@ -27,7 +27,8 @@ Inspired by the AutoGen framework's `Select Speaker` function, we introduced the
 
 ## Current Example
 In the latest experiment results, we discussed whether CloseAI company's products should be subject to user supervision. During this discussion, there was an instance where PowerAgent proactively ended the meeting and made sound decisions related to the topic.
-![terminate result](src/terminate.png)
+
+
 ```text
 ---------------------------------------message history---------------------------------------
 conference's topic: CloseAI, a leading tech company, has revolutionized the field with an advanced AI that transcends human imagination. Their flagship product, 'CogniX', has applications ranging from healthcare to finance, raising questions about the need for regulatory oversight. Should CloseAI's AI products be subject to government regulation?.
