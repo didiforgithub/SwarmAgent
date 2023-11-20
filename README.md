@@ -16,13 +16,17 @@ The communication environment of a group, referred to as "environment" in the co
 
 - The design for specific execution steps, such as time steps, has not been implemented yet; this is the current conceptualization.
 
+<p align="center">
+  <img src="src/environment.png" alt="SWARM AGENT" >
+</p>
+
 ### Power Allocation (Group Core) Design
 The power allocation mechanism requires a modelable theory as a foundation, but a suitable theory has not been found yet. Therefore, a relatively simple mechanism is used for power allocation.
 
 Inspired by the AutoGen framework's `Select Speaker` function, we introduced the PowerAgent attribute to the Group class. In a simple scenario like a meeting, PowerAgent represents the boss of the company meeting, having the right to end the meeting and make decisions. Other agents can only speak in the meeting and influence the PowerAgent, but they cannot make decisions. In this scenario, PowerAgent's power allocation is 1, while other agents have a power allocation of 0. A simple example of a meeting is illustrated below:
 
 <p align="center">
-  <img src="src/conference.drawio.png" alt="SWARM AGENT" width="100%">
+  <img src="src/conference.drawio.png" alt="SWARM AGENT">
 </p>
 
 ## Current Example

@@ -18,6 +18,10 @@ Group的通信环境在代码结构中被称为environment。为了模拟真实�
 
 - 未进行时间步等具体执行的设计，是当前的构想
 
+<p align="center">
+  <img src="src/environment.png" alt="SWARM AGENT" >
+</p>
+
 ### 权力分配（Group本体）设计
 权力分配机制需要一个可建模的理论作为基础，目前还未找到一个较好的理论进行建模，因此权力分配选用一个相对简单的机制实现。
 
@@ -27,7 +31,7 @@ Group的通信环境在代码结构中被称为environment。为了模拟真实�
 
 
 <p align="center">
-  <img src="src/conference.drawio.png" alt="SWARM AGENT" width="100%">
+  <img src="src/conference.drawio.png" alt="SWARM AGENT">
 </p>
 
 ## 当前示例
