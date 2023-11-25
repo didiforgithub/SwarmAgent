@@ -67,13 +67,13 @@ class Agent:
                 json.dump({}, f)  # 创建一个空的字典
             self.memory = {}
 
-    def generate_chat(self, query, instruction, max_tokens=100):
+    def generate_chat(self, query, instruction, max_tokens=500):
         # 思考Prompt组成方式：Profile + Content(query) + Instruction
-        prompt = self.profile + '\n' + query + '\n' + instruction
+        prompt = self.profile + '\n' + self.innervoice + '\n' + query + '\n' + instruction
         chat = self.llm.get_response(prompt, max_tokens=max_tokens)
         return chat
 
-    def generate_json(self, query, instruction="Please return result in JSON format.", max_tokens=100):
+    def generate_json(self, query, instruction="Please return result in JSON format.", max_tokens=500):
         prompt = self.profile + query + instruction
         json_result = self.llm.get_response(prompt, json_mode=True, max_tokens=max_tokens)
 

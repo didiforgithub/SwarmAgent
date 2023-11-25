@@ -101,7 +101,7 @@ class Group:
             return self.power_agent
 
 
-    def communicate_chat(self, address_agent: Agent, max_tokens=300):
+    def communicate_chat(self, address_agent: Agent, max_tokens=500):
         communicate_prmopt = f"""
         In a role-playing game, you're participating in a meeting centered around the topic of {self.topic}. 
         You are limited to playing the specific character mentioned previously. Your responses and decisions must be based solely on this character's perspective, considering their unique role and background.

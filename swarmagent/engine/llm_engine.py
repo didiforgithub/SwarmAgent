@@ -16,7 +16,7 @@ class OpenAILLM:
         self.temperature = temperature
         self.timeout = timeout
 
-    def get_response(self, prompt: str, json_mode=False, max_tokens=100, retries=5):
+    def get_response(self, prompt: str, json_mode=False, max_tokens=500, retries=5):
         print(f"current prompt :{prompt}")
         print(f"current json mode: {json_mode}")
         """
