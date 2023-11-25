@@ -20,7 +20,7 @@ from swarmagent.agent.singleagent import Agent
 
 class Group:
     def __init__(self, power_agent: Agent, agent_list: List[Agent], topic: str, mode="conference", max_round=10,
-                 message_history=None):
+                 message_history=None,model="gpt-3.5-turbo-1106"):
         self.power_agent = power_agent
         self.agent_list = agent_list
         self.topic = topic
@@ -30,7 +30,7 @@ class Group:
             self.message_history = []
         else:
             self.message_history = message_history
-        self.llm = OpenAILLM()
+        self.llm = OpenAILLM(model=model)
 
     def group_chat(self):
         if self.mode == "conference":
