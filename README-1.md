@@ -9,10 +9,24 @@
 
 基于此，SwarmAgent有以下两个特点：
 1. 基于权力分配理论的群体决策机制
-2. 容纳多个Group的通信环境
+2. 基于真实世界Group分布的环境(env)
 
-## 当前实现
-### Group通信设计
+## 方案一 毕业设计级别方案（当前实现）
+
+**可实现场景**：
+1. 公司会议决策实现
+2. 群体舆论传播研究（Web Discussion Group）
+3. 产业模拟研究(Company Conference)
+
+**主体结构**
+1. Agent
+2. Group
+3. Environment
+
+与方案2相比，方案1的最大差异在于没有时间步设计，Group之间信息的传递方式只有显式传递，同时，Agent难以完成在不同Group之间的流通
+
+###  当前实现
+####  Group通信设计
 Group的通信环境在代码结构中被称为environment。为了模拟真实社会中的情景，Group拥有多种不同的mode，用户可以通过继承Group类对mode进行扩展，以实现用户所需求的模拟场景。
 而environment类则可支持多个不同mode类的运行，如家庭，公司，非盈利组织，网络群组等。不同mode的Group可以通过environment进行通信，从而实现不同mode之间的交互。
 
@@ -34,8 +48,8 @@ Group的通信环境在代码结构中被称为environment。为了模拟真实�
   <img src="src/conference.drawio.png" alt="SWARM AGENT">
 </p>
 
-## 当前示例
-```angular2html
+### 当前示例
+```
 ---------------------------------------message history---------------------------------------
 conference's topic: CloseAI, a leading tech company, has revolutionized the field with an advanced AI that transcends human imagination. Their flagship product, 'CogniX', has applications ranging from healthcare to finance, raising questions about the need for regulatory oversight. Should CloseAI's AI products be subject to government regulation?.
 
