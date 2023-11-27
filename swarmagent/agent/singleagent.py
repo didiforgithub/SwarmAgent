@@ -95,3 +95,23 @@ class Agent:
         :return:
         """
         pass
+
+
+class SingleAgent:
+    def __init__(self):
+        self.memory = ""
+        self.profile = ""
+        self.inner_voice = ""
+        pass
+
+    def perceive(self):
+        pass
+
+    def retrieve(self):
+        pass
+
+    def plan(self):
+        pass
+
+    def reflect(self):
+        pass
