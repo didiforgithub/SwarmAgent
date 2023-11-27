@@ -20,7 +20,7 @@ from swarmagent.agent.singleagent import Agent
 
 class Group:
     def __init__(self, power_agent: Agent, agent_list: List[Agent], topic: str, mode="conference", max_round=10,
-                 message_history=None,model="gpt-3.5-turbo-1106"):
+                 message_history=None, model="gpt-3.5-turbo-1106"):
         self.power_agent = power_agent
         self.agent_list = agent_list
         self.topic = topic
@@ -100,7 +100,6 @@ class Group:
         else:
             return self.power_agent
 
-
     def communicate_chat(self, address_agent: Agent, max_tokens=500):
         communicate_prmopt = f"""
         In a role-playing game, you're participating in a meeting centered around the topic of {self.topic}. 
@@ -114,7 +113,6 @@ class Group:
         chat = address_agent.generate_chat(query=f"message history: {self.message}",
                                            instruction=f"instruction: {communicate_prmopt}", max_tokens=max_tokens)
         return chat
-
 
     def begin_chat(self):
         # 开场白，修改Prompt
@@ -157,3 +155,11 @@ class Group:
         result = self.power_agent.generate_json(query=f"message history: {self.message}", instruction=conclusion_prompt)
         print(f"conclusion_chat:{result}")
         return f'decision:{result["Decision"]},reason:{result["Reason"]}'
+
+
+class BaseGroup:
+    def __init__(self):
+        pass
+
+    def run(self):
+        pass
